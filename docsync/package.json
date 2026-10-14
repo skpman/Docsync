@@ -1,0 +1,23 @@
+{
+  "name": "docsync",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CRDT-based, offline-capable collaborative document editor",
+  "workspaces": [
+    "packages/common",
+    "packages/api",
+    "packages/sync",
+    "packages/web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,sync,web -c blue,magenta,green \"npm:dev -w @docsync/api\" \"npm:dev -w @docsync/sync\" \"npm:dev -w @docsync/web\"",
+    "migrate": "npm run migrate -w @docsync/common",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build -w @docsync/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "typescript": "^5.6.3"
+  }
+}

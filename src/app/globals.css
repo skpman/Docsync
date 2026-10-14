@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #f7f8fc;
+  --ink: #19243a;
+  --muted: #67748b;
+  --line: #e5e9f1;
+  --primary: #5b5ce2;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font-family: Arial, Helvetica, sans-serif; }
+button { font: inherit; }
+.editor .tiptap { min-height: 54vh; outline: none; font-family: Georgia, "Times New Roman", serif; font-size: 1.08rem; line-height: 1.7; }
+.editor .tiptap h1 { font-family: Arial, Helvetica, sans-serif; font-size: 2.15rem; line-height: 1.2; margin: 0 0 1.1rem; }
+.editor .tiptap h2 { font-family: Arial, Helvetica, sans-serif; font-size: 1.45rem; line-height: 1.3; margin: 2rem 0 .6rem; }
+.editor .tiptap p { margin: .7rem 0; }
+.editor .tiptap ul, .editor .tiptap ol { padding-left: 1.5rem; }
+.editor .tiptap blockquote { border-left: 3px solid #c9cffd; color: #526078; margin: 1.25rem 0; padding-left: 1rem; }
+.editor .tiptap p.is-editor-empty:first-child::before { color: #a7b0c2; content: attr(data-placeholder); float: left; height: 0; pointer-events: none; }

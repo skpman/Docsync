@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: docsync
+      POSTGRES_PASSWORD: docsync
+      POSTGRES_DB: docsync
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U docsync"]
+      interval: 3s
+      retries: 20
+
+  api:
+    build: { context: ., args: { SERVICE: api } }
+    environment: &backend-env
+      DATABASE_URL: postgres://docsync:docsync@postgres:5432/docsync
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      INTERNAL_SECRET: ${INTERNAL_SECRET:-change-me-too}
+      STORAGE_DRIVER: fs
+      FS_STORAGE_DIR: /data/snapshots
+      SYNC_INTERNAL_URL: http://sync:4001
+    depends_on:
+      postgres: { condition: service_healthy }
+    volumes:
+      - snapshots:/data/snapshots
+    ports:
+      - "4000:4000"
+
+  sync:
+    build: { context: ., args: { SERVICE: sync } }
+    environment: *backend-env
+    depends_on:
+      postgres: { condition: service_healthy }
+    volumes:
+      - snapshots:/data/snapshots
+    ports:
+      - "4001:4001"
+
+  web:
+    build: { context: ., dockerfile: deploy/web.Dockerfile }
+    depends_on: [api, sync]
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:
+  snapshots:
